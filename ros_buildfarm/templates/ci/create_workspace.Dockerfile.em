@@ -1,5 +1,6 @@
 # generated from @template_name
 @{
+global os
 import os
 }@
 
