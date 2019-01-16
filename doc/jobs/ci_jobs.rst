@@ -74,12 +74,12 @@ The task performs the following steps:
 Build and install
 ^^^^^^^^^^^^^^^^^
 
-This task is identical to `the one used by the *devel* jobs<devel_jobs.rst#Build-and-install>`.
+This task is identical to `the one used by the devel jobs <devel_jobs.rst#Build-and-install>`_.
 
 Build and test
 ^^^^^^^^^^^^^^
 
-This task is identical to `the one used by the *devel* jobs<devel_jobs.rst#Build-and-test>`.
+This task is identical to `the one used by the devel jobs <devel_jobs.rst#Build-and-test>`_.
 
 Known limitations
 ^^^^^^^^^^^^^^^^^
