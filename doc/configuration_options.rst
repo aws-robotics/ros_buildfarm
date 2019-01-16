@@ -399,7 +399,7 @@ This yaml file defines the configuration for *CI* jobs.
 
 The file format is specified by the following information:
 
-* ``type: doc-build`` identifies the yaml file as a *CI build file*.
+* ``type: ci-build`` identifies the yaml file as a *CI build file*.
 * ``version: 1`` specifies the specification version of the file.
 
 The following options are valid in version ``1`` (beside the generic options):
