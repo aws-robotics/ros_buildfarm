@@ -122,7 +122,7 @@ Instead of invoking the generated script it can also be *sourced*:
   . ci_job_crystal.sh
 
 The return code of the invocation of ``catkin_tests_results`` /
-``colcon test-result``is then available in the environment variable
+``colcon test-result`` is then available in the environment variable
 ``test_result_RC``.
 
 Run the *CI* job on Travis
