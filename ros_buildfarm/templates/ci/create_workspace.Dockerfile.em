@@ -74,9 +74,6 @@ RUN echo "@today_str"
     custom_rosdep_urls=custom_rosdep_urls,
 ))@
 
-# TODO(cottsay): This is a pretty big hack. We'll need to have a conversation here.
-RUN sed -i "/\"has no 'setup\.py' file\" \.format_map(locals()))/{N;s/\"has no 'setup\.py' file\" \.format_map(locals()))\n                raise IgnoreLocationException()/\"has no 'setup\.py' file\" \.format_map(locals()))/g}" /usr/lib/python3/dist-packages/colcon_ros/package_identification/ros.py
-
 USER buildfarm
 ENTRYPOINT ["sh", "-c"]
 @{
@@ -110,29 +107,15 @@ if packages_select:
         ' --testing',
     ]
 cmds += [
-    'PYTHONPATH=/tmp/ros_buildfarm:$PYTHONPATH' + \
-    ' COLCON_PREFIX_PATH=' + ':'.join(install_paths) + \
-    ' colcon' + \
-    ' --log-base /tmp/colcon_log' + \
-    ' ros-buildfarm-list-rosdeps' + \
-    ' --testing' + \
-    ' --base-paths ' + ' '.join(base_paths) + \
-    ' --packages-under-directory ' + workspace_root[-1] + \
-    ' > ' + os.path.join(workspace_root[-1], 'rosdep_list.txt'),
-
-    'sed -i "/^\\(' + '\\|'.join(skip_rosdep_keys) + '\\)$/d" ' + os.path.join(workspace_root[-1], 'rosdep_list.txt'),
-
-    'xargs -a ' + os.path.join(workspace_root[-1], 'rosdep_list.txt') + \
-    ' rosdep resolve' + \
-    ' --rosdistro=' + rosdistro_name + \
-    ' --filter-for-installers=apt' + \
-    ' --os=%s:%s' % (os_name, os_code_name) + \
-    ' > ' + os.path.join(workspace_root[-1], 'install_list.txt'),
-
-    'sed -i "/^\(#\|$\)/d" ' + os.path.join(workspace_root[-1], 'install_list.txt'),
-
-    'sort ' + os.path.join(workspace_root[-1], 'install_list.txt') + \
-    ' -o ' + os.path.join(workspace_root[-1], 'install_list.txt'),
+    'PYTHONPATH=/tmp/ros_buildfarm:$PYTHONPATH python3 -u' + \
+    ' /tmp/ros_buildfarm/scripts/ci/get_rosdep_dependencies.py' + \
+    ' --package-root ' + ' '.join(base_paths) + \
+    ' --rosdistro-name ' + rosdistro_name + \
+    ' --os-name ' + os_name + \
+    ' --os-code-name ' + os_code_name + \
+    ' --output-file ' + os.path.join(workspace_root[-1], 'install_list.txt') + \
+    ' --skip-rosdep-keys ' + ' '.join(skip_rosdep_keys) + \
+    ' --testing',
 ]
 cmd = ' && '.join(cmds).replace('\\', '\\\\').replace('"', '\\"')
 }@

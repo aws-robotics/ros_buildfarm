@@ -47,11 +47,7 @@ kwargs = {
     'entry_points': {
         'colcon_core.verb': [
             'ros-buildfarm-ignore = ros_buildfarm.colcon.verb.ignore:IgnoreVerb',
-            'ros-buildfarm-list-rosdeps = ros_buildfarm.colcon.verb.list_rosdeps:ListRosdepsVerb',
             'ros-buildfarm-scope = ros_buildfarm.colcon.verb.scope:ScopeVerb',
-            ],
-        'colcon_core.package_selection': [
-            'ros-buildfarm-under-directory = ros_buildfarm.colcon.package_selection.under_directory:UnderDirectoryPackageSelection',
             ],
         },
 }
