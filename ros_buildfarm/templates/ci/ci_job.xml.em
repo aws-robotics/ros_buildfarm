@@ -148,6 +148,11 @@ parameters = [
         '# sleep to give python time to startup',
         'sleep 1',
         '',
+        '# create a unique dockerfile name prefix',
+        'export DOCKER_IMAGE_PREFIX=$BUILD_TAG',
+        '# if we have no build tag, fall back to a precise timestamp',
+        '[ -z "$DOCKER_IMAGE_PREFIX" ] && export DOCKER_IMAGE_PREFIX=$(date +%s.%N)',
+        '',
         '# generate Dockerfile, build and run it',
         '# generating the Dockerfiles for the actual CI tasks',
         'echo "# BEGIN SECTION: Generate Dockerfile - CI tasks"',
@@ -177,7 +182,7 @@ parameters = [
         'echo "# BEGIN SECTION: Build Dockerfile - generating CI tasks"',
         'cd $WORKSPACE/docker_generating_dockers',
         'python3 -u $WORKSPACE/ros_buildfarm/scripts/misc/docker_pull_baseimage.py',
-        'docker build --force-rm -t ci_task_generation.%s .' % (rosdistro_name),
+        'docker build --force-rm -t $DOCKER_IMAGE_PREFIX.ci_task_generation.%s .' % (rosdistro_name),
         'echo "# END SECTION"',
         '',
         'echo "# BEGIN SECTION: Run Dockerfile - generating CI tasks"',
@@ -195,7 +200,7 @@ parameters = [
         ' -v $WORKSPACE/docker_create_workspace:/tmp/docker_create_workspace' +
         ' -v $WORKSPACE/docker_build_and_install:/tmp/docker_build_and_install' +
         ' -v $WORKSPACE/docker_build_and_test:/tmp/docker_build_and_test' +
-        ' ci_task_generation.%s' % (rosdistro_name),
+        ' $DOCKER_IMAGE_PREFIX.ci_task_generation.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts
         'echo "# END SECTION"',
     ]),
@@ -212,7 +217,7 @@ parameters = [
         '# build and run create_workspace Dockerfile',
         'cd $WORKSPACE/docker_create_workspace',
         'python3 -u $WORKSPACE/ros_buildfarm/scripts/misc/docker_pull_baseimage.py',
-        'docker build --force-rm -t ci_create_workspace.%s .' % (rosdistro_name),
+        'docker build --force-rm -t $DOCKER_IMAGE_PREFIX.ci_create_workspace.%s .' % (rosdistro_name),
         'echo "# END SECTION"',
         '',
         '# Ensure an egg_info exists in the ros_buildfarm package (for Colcon entry points)',
@@ -229,7 +234,7 @@ parameters = [
         (' -v $WORKSPACE/ws:/tmp/ws' if underlay_source_job is None else \
          ' -v $WORKSPACE/underlay/ros%d-linux:/tmp/ws/install_isolated' % (ros_version) +
          ' -v $WORKSPACE/ws:/tmp/ws_overlay') +
-        ' ci_create_workspace.%s' % (rosdistro_name),
+        ' $DOCKER_IMAGE_PREFIX.ci_create_workspace.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts
         'echo "# END SECTION"',
     ]),
@@ -255,7 +260,7 @@ parameters = [
         '# build and run build and install Dockerfile',
         'cd $WORKSPACE/docker_build_and_install',
         'python3 -u $WORKSPACE/ros_buildfarm/scripts/misc/docker_pull_baseimage.py',
-        'docker build --force-rm -t ci_build_and_install.%s .' % (rosdistro_name),
+        'docker build --force-rm -t $DOCKER_IMAGE_PREFIX.ci_build_and_install.%s .' % (rosdistro_name),
         'echo "# END SECTION"',
         '',
         'echo "# BEGIN SECTION: ccache stats (before)"',
@@ -265,7 +270,7 @@ parameters = [
         ' --cidfile=$WORKSPACE/docker_build_and_install/docker_ccache_before.cid' +
         ' -e CCACHE_DIR=/home/buildfarm/.ccache' +
         ' -v $HOME/.ccache:/home/buildfarm/.ccache' +
-        ' ci_build_and_install.%s' % (rosdistro_name) +
+        ' $DOCKER_IMAGE_PREFIX.ci_build_and_install.%s' % (rosdistro_name) +
         ' "ccache -s"',
         'echo "# END SECTION"',
         '',
@@ -279,7 +284,7 @@ parameters = [
         (' -v $WORKSPACE/ws:/tmp/ws' if underlay_source_job is None else \
          ' -v $WORKSPACE/underlay/ros%d-linux:/tmp/ws/install_isolated' % (ros_version) +
          ' -v $WORKSPACE/ws:/tmp/ws_overlay') +
-        ' ci_build_and_install.%s' % (rosdistro_name),
+        ' $DOCKER_IMAGE_PREFIX.ci_build_and_install.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts
         'echo "# END SECTION"',
         '',
@@ -289,7 +294,7 @@ parameters = [
         ' --cidfile=$WORKSPACE/docker_build_and_install/docker_ccache_after.cid' +
         ' -e CCACHE_DIR=/home/buildfarm/.ccache' +
         ' -v $HOME/.ccache:/home/buildfarm/.ccache' +
-        ' ci_build_and_install.%s' % (rosdistro_name) +
+        ' $DOCKER_IMAGE_PREFIX.ci_build_and_install.%s' % (rosdistro_name) +
         ' "ccache -s"',
         'echo "# END SECTION"',
     ]),
@@ -317,7 +322,7 @@ parameters = [
         '# build and run build and test Dockerfile',
         'cd $WORKSPACE/docker_build_and_test',
         'python3 -u $WORKSPACE/ros_buildfarm/scripts/misc/docker_pull_baseimage.py',
-        'docker build --force-rm -t ci_build_and_test.%s .' % (rosdistro_name),
+        'docker build --force-rm -t $DOCKER_IMAGE_PREFIX.ci_build_and_test.%s .' % (rosdistro_name),
         'echo "# END SECTION"',
         '',
         'echo "# BEGIN SECTION: ccache stats (before)"',
@@ -327,7 +332,7 @@ parameters = [
         ' --cidfile=$WORKSPACE/docker_build_and_test/docker_ccache_before.cid' +
         ' -e CCACHE_DIR=/home/buildfarm/.ccache' +
         ' -v $HOME/.ccache:/home/buildfarm/.ccache' +
-        ' ci_build_and_test.%s' % (rosdistro_name) +
+        ' $DOCKER_IMAGE_PREFIX.ci_build_and_test.%s' % (rosdistro_name) +
         ' "ccache -s"',
         'echo "# END SECTION"',
         '',
@@ -343,7 +348,7 @@ parameters = [
         (' -v $WORKSPACE/ws:/tmp/ws' if underlay_source_job is None else \
          ' -v $WORKSPACE/underlay/ros%d-linux:/tmp/ws/install_isolated' % (ros_version) +
          ' -v $WORKSPACE/ws:/tmp/ws_overlay') +
-        ' ci_build_and_test.%s' % (rosdistro_name),
+        ' $DOCKER_IMAGE_PREFIX.ci_build_and_test.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts
         'echo "# END SECTION"',
         '',
@@ -353,7 +358,7 @@ parameters = [
         ' --cidfile=$WORKSPACE/docker_build_and_test/docker_ccache_after.cid' +
         ' -e CCACHE_DIR=/home/buildfarm/.ccache' +
         ' -v $HOME/.ccache:/home/buildfarm/.ccache' +
-        ' ci_build_and_test.%s' % (rosdistro_name) +
+        ' $DOCKER_IMAGE_PREFIX.ci_build_and_test.%s' % (rosdistro_name) +
         ' "ccache -s"',
         'echo "# END SECTION"',
     ]),
