@@ -155,7 +155,6 @@ parameters = [
         '# generating the Dockerfiles for the actual CI tasks',
         'echo "# BEGIN SECTION: Generate Dockerfile - CI tasks"',
         'export TZ="%s"' % timezone,
-        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'export PYTHONPATH=$WORKSPACE/ros_buildfarm:$PYTHONPATH',
         'python3 -u $WORKSPACE/ros_buildfarm/scripts/ci/run_ci_job.py' +
         ' ' + rosdistro_name +
@@ -229,6 +228,7 @@ parameters = [
         'python3 -u $WORKSPACE/ros_buildfarm/setup.py egg_info -e $WORKSPACE/ros_buildfarm',
         '',
         'echo "# BEGIN SECTION: Run Dockerfile - create workspace"',
+        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'rm -fr $WORKSPACE/ws/src',
         'mkdir -p $WORKSPACE/ws/src',
         '\n'.join(['mkdir -p %s' % (dir) for dir in underlay_source_paths or []]),
@@ -283,6 +283,7 @@ parameters = [
         'echo "# END SECTION"',
         '',
         'echo "# BEGIN SECTION: Run Dockerfile - build and install"',
+        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'docker run' +
         ' --rm ' +
         ' --cidfile=$WORKSPACE/docker_build_and_install/docker.cid' +
@@ -348,6 +349,7 @@ parameters = [
         'echo "# END SECTION"',
         '',
         'echo "# BEGIN SECTION: Run Dockerfile - build and test"',
+        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'rm -fr $WORKSPACE/ws/test_results',
         'mkdir -p $WORKSPACE/ws/test_results',
         'docker run' +
