@@ -78,7 +78,7 @@ USER buildfarm
 ENTRYPOINT ["sh", "-c"]
 @{
 install_paths = [os.path.join(root, 'install_isolated') for root in workspace_root[0:-1]]
-base_paths = [path for root in [workspace_root[-1] for path in (root, os.path.join(root, 'share')]
+base_paths = [path for root in install_paths for path in (root, os.path.join(root, 'share'))] + [workspace_root[-1]]
 cmds = [
     'rosdep update',
 
