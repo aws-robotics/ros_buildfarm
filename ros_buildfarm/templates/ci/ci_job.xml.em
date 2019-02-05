@@ -132,7 +132,6 @@ parameters = [
 @(SNIPPET(
     'builder_shell',
     script='\n'.join([
-        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'tar -xjf $WORKSPACE/underlay/*.tar.bz2 -C $WORKSPACE/underlay',
         'echo "# END SECTION"',
     ]),
@@ -156,6 +155,7 @@ parameters = [
         '# generating the Dockerfiles for the actual CI tasks',
         'echo "# BEGIN SECTION: Generate Dockerfile - CI tasks"',
         'export TZ="%s"' % timezone,
+        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'export PYTHONPATH=$WORKSPACE/ros_buildfarm:$PYTHONPATH',
         'python3 -u $WORKSPACE/ros_buildfarm/scripts/ci/run_ci_job.py' +
         ' ' + rosdistro_name +

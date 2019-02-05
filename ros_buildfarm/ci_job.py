@@ -15,7 +15,6 @@
 from __future__ import print_function
 
 from collections import OrderedDict
-import os
 import sys
 
 from ros_buildfarm.common import get_default_node_label
@@ -251,8 +250,6 @@ def _get_ci_job_config(
 
     if underlay_source_job is not None:
         assert '$UNDERLAY_JOB_SPACE' in underlay_source_paths
-    if underlay_source_paths is not None:
-        underlay_source_paths = [os.path.abspath(p) for p in underlay_source_paths]
 
     job_data = {
         'job_priority': build_file.jenkins_job_priority,

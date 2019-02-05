@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import argparse
+import os
 import sys
 
 from em import BANGPATH_OPT
@@ -138,12 +139,14 @@ def main(argv=sys.argv[1:]):
     build_files = get_ci_build_files(config, args.rosdistro_name)
     build_file = build_files[args.ci_build_name]
 
+    underlay_source_paths = [os.path.abspath(p) for p in args.underlay_source_path or []]
+
     configure_ci_job(
         args.config_url, args.rosdistro_name, args.ci_build_name,
         args.os_name, args.os_code_name, args.arch,
         config=config, build_file=build_file, jenkins=False, views=False,
         job_type='script',
-        underlay_source_paths=args.underlay_source_path)
+        underlay_source_paths=underlay_source_paths)
 
     templates.template_hooks = None
 
