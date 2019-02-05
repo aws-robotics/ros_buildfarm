@@ -51,11 +51,8 @@ USER buildfarm
 
 ENTRYPOINT ["sh", "-c"]
 @{
-workspace_root = ['/tmp/ws']
-if as_overlay:
-    workspace_root += ['/tmp/ws_overlay']
 args = \
-    ' --workspace-root ' + ' '.join(workspace_root) + \
+    ' --workspace-root ' + ' '.join(workspace_mount_point) + \
     ' --rosdistro-name ' + rosdistro_name + \
     ' --os-name ' + os_name + \
     ' --os-code-name ' + os_code_name + \

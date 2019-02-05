@@ -132,6 +132,7 @@ parameters = [
 @(SNIPPET(
     'builder_shell',
     script='\n'.join([
+        'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
         'tar -xjf $WORKSPACE/underlay/*.tar.bz2 -C $WORKSPACE/underlay',
         'echo "# END SECTION"',
     ]),
@@ -173,7 +174,10 @@ parameters = [
         ' --skip-rosdep-keys ' + ' '.join(skip_rosdep_keys) +
         ' --build-ignore $build_ignore' +
         ' --foundation-packages $foundation_packages' +
-        (' --as-overlay' if underlay_source_job is not None else '') +
+        ' --workspace-mount-point' +
+        (' /tmp/ws' if not underlay_source_paths else \
+         ''.join([' /tmp/ws%s' % (i or '') for i in range(len(underlay_source_paths))]) +
+         ' /tmp/ws_overlay') +
         ' --depth-before $depth_before' +
         ' --depth-after $depth_after' +
         ' --packages-select $packages_select',
@@ -226,13 +230,13 @@ parameters = [
         'echo "# BEGIN SECTION: Run Dockerfile - create workspace"',
         'rm -fr $WORKSPACE/ws/src',
         'mkdir -p $WORKSPACE/ws/src',
-        'mkdir -p $WORKSPACE/underlay/ros%d-linux' % (ros_version),
+        '\n'.join(['mkdir -p %s' % (dir) for dir in underlay_source_paths or []]),
         'docker run' +
         ' --rm ' +
         ' --cidfile=$WORKSPACE/docker_create_workspace/docker.cid' +
         ' -v $WORKSPACE/ros_buildfarm:/tmp/ros_buildfarm:ro' +
-        (' -v $WORKSPACE/ws:/tmp/ws' if underlay_source_job is None else \
-         ' -v $WORKSPACE/underlay/ros%d-linux:/tmp/ws/install_isolated' % (ros_version) +
+        (' -v $WORKSPACE/ws:/tmp/ws' if not underlay_source_paths else \
+         ''.join([' -v %s:/tmp/ws%s/install_isolated' % (space, i or '') for i, space in enumerate(underlay_source_paths)]) +
          ' -v $WORKSPACE/ws:/tmp/ws_overlay') +
         ' $DOCKER_IMAGE_PREFIX.ci_create_workspace.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts
@@ -281,8 +285,8 @@ parameters = [
         ' -e CCACHE_DIR=/home/buildfarm/.ccache' +
         ' -v $HOME/.ccache:/home/buildfarm/.ccache' +
         ' -v $WORKSPACE/ros_buildfarm:/tmp/ros_buildfarm:ro' +
-        (' -v $WORKSPACE/ws:/tmp/ws' if underlay_source_job is None else \
-         ' -v $WORKSPACE/underlay/ros%d-linux:/tmp/ws/install_isolated' % (ros_version) +
+        (' -v $WORKSPACE/ws:/tmp/ws' if not underlay_source_paths else \
+         ''.join([' -v %s:/tmp/ws%s/install_isolated' % (space, i or '') for i, space in enumerate(underlay_source_paths)]) +
          ' -v $WORKSPACE/ws:/tmp/ws_overlay') +
         ' $DOCKER_IMAGE_PREFIX.ci_build_and_install.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts
@@ -345,8 +349,8 @@ parameters = [
         ' -e CCACHE_DIR=/home/buildfarm/.ccache' +
         ' -v $HOME/.ccache:/home/buildfarm/.ccache' +
         ' -v $WORKSPACE/ros_buildfarm:/tmp/ros_buildfarm:ro' +
-        (' -v $WORKSPACE/ws:/tmp/ws' if underlay_source_job is None else \
-         ' -v $WORKSPACE/underlay/ros%d-linux:/tmp/ws/install_isolated' % (ros_version) +
+        (' -v $WORKSPACE/ws:/tmp/ws' if not underlay_source_paths else \
+         ''.join([' -v %s:/tmp/ws%s/install_isolated' % (space, i or '') for i, space in enumerate(underlay_source_paths)]) +
          ' -v $WORKSPACE/ws:/tmp/ws_overlay') +
         ' $DOCKER_IMAGE_PREFIX.ci_build_and_test.%s' % (rosdistro_name),
         'cd -',  # restore pwd when used in scripts

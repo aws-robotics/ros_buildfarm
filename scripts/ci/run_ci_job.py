@@ -66,10 +66,9 @@ def main(argv=sys.argv[1:]):
         help="The specified package(s) will be ignored, i.e. not built, "
              "tested, or installed.")
     parser.add_argument(
-        '--as-overlay',
-        help="If specified, the CI job will expect to build an overlay "
-             "workspace atop a pre-populated one.",
-        action='store_true')
+        '--workspace-mount-point', nargs='*',
+        help="Locations within the docker image where the workspace(s) "
+             "will be mounted when the docker image is run.")
     parser.add_argument(
         '--foundation-packages',
         nargs='*',

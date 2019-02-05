@@ -133,8 +133,9 @@ def main(argv=sys.argv[1:]):
     if len(args.workspace_root) == 1:
         print('  -v %s:/tmp/ws' % args.workspace_root[0])
     else:
-        print('  -v %s:/tmp/ws' % args.workspace_root[0])
-        print('  -v %s:/tmp/ws_overlay' % args.workspace_root[1])
+        for i, workspace_root in enumerate(args.workspace_root[0:-1]):
+            print('  -v %s:/tmp/ws%s' % (workspace_root, i or ''))
+        print('  -v %s:/tmp/ws_overlay' % args.workspace_root[-1])
 
 
 def write_install_list(install_list_path, debian_pkg_names, apt_cache):

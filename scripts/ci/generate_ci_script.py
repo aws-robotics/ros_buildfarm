@@ -65,6 +65,9 @@ def main(argv=sys.argv[1:]):
     parser.add_argument(
         '--depth-after', type=int, metavar='NUM_AFTER', default=None,
         help='Number of reverse dependencies of selected packages to be include in scope')
+    parser.add_argument(
+        '--underlay-source-path', nargs='*', metavar='DIR_NAME',
+        help='Path to one or more install spaces to use as an underlay')
     args = parser.parse_args(argv)
 
     # collect all template snippets of specific types
@@ -139,7 +142,8 @@ def main(argv=sys.argv[1:]):
         args.config_url, args.rosdistro_name, args.ci_build_name,
         args.os_name, args.os_code_name, args.arch,
         config=config, build_file=build_file, jenkins=False, views=False,
-        job_type='script')
+        job_type='script',
+        underlay_source_paths=args.underlay_source_path)
 
     templates.template_hooks = None
 

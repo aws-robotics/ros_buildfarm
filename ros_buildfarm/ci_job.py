@@ -15,6 +15,7 @@
 from __future__ import print_function
 
 from collections import OrderedDict
+import os
 import sys
 
 from ros_buildfarm.common import get_default_node_label
@@ -117,7 +118,8 @@ def configure_ci_jobs(
                 is_disabled=is_disabled,
                 groovy_script=groovy_script,
                 dry_run=dry_run,
-                underlay_source_job=nightly_job_name)
+                underlay_source_job=nightly_job_name,
+                underlay_source_paths=['$UNDERLAY_JOB_SPACE'])
             ci_job_names.append(job_name)
             if groovy_script is not None:
                 print("Configuration for job '%s'" % job_name)
@@ -149,6 +151,7 @@ def configure_ci_job(
         build_targets=None,
         dry_run=False,
         underlay_source_job=None,
+        underlay_source_paths=None,
         trigger_timer=None):
     """
     Configure a single Jenkins CI job.
@@ -206,6 +209,7 @@ def configure_ci_job(
         os_code_name, arch, job_name,
         build_file.repos_files,
         underlay_source_job,
+        underlay_source_paths,
         trigger_timer,
         is_disabled=is_disabled)
     # jenkinsapi.jenkins.Jenkins evaluates to false if job count is zero
@@ -227,7 +231,7 @@ def _get_ci_job_config(
         index, rosdistro_name, build_file, os_name,
         os_code_name, arch, job_name,
         repos_files, underlay_source_job,
-        trigger_timer,
+        underlay_source_paths, trigger_timer,
         is_disabled=False):
     template_name = 'ci/ci_job.xml.em'
 
@@ -244,6 +248,11 @@ def _get_ci_job_config(
         .get('distribution_type', 'ros1')
     assert distribution_type in ('ros1', 'ros2')
     ros_version = 1 if distribution_type == 'ros1' else 2
+
+    if underlay_source_job is not None:
+        assert '$UNDERLAY_JOB_SPACE' in underlay_source_paths
+    if underlay_source_paths is not None:
+        underlay_source_paths = [os.path.abspath(p) for p in underlay_source_paths]
 
     job_data = {
         'job_priority': build_file.jenkins_job_priority,
@@ -281,6 +290,7 @@ def _get_ci_job_config(
         'foundation_packages': build_file.foundation_packages,
 
         'underlay_source_job': underlay_source_job,
+        'underlay_source_paths': underlay_source_paths,
         'trigger_timer': trigger_timer,
     }
     job_config = expand_template(template_name, job_data)
