@@ -88,7 +88,7 @@ System dependency enumeration happens for all ROS packages that are part of the
 non-underlay workspace. This means that any non-ROS packages present in that
 workspace may need their dependencies explicitly called out for inclusion in
 the foundation package list, and also means that a missing dependency may be
-occluded by another package in the workspace correctly taking the same
+occluded by another package in the workspace correctly declaring the same
 dependency.
 
 Run the *CI* job locally
