@@ -35,8 +35,8 @@ configuration, unless specified otherwise:
 The build process in detail
 ---------------------------
 
-The actual build is performed within a Docker container in order to only make
-the declared dependencies available.
+The actual build is performed within a Docker container in order to ensure
+only declared dependencies are available.
 
 The actual build process starts in the script *create_ci_task_generator.py*.
 It generates three Dockerfiles: one to perform the *create-workspace* task to
