@@ -3,7 +3,7 @@
 
 A *CI* job is used for continuous integration in batch.
 It builds the code and runs the tests to check for regressions.
-It operates on many source repositories as specified in one ore more ``.repos``
+It operates on many source repositories as specified in one or more ``.repos``
 files, and is triggered to produce a nightly "fat" archive, and can also be
 triggered manually to quickly test changes on a select set of packages.
 
