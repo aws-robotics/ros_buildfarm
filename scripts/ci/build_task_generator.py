@@ -82,10 +82,10 @@ def main(argv=sys.argv[1:]):
     debian_pkg_names = set(args.foundation_packages)
     if args.build_tool == 'colcon':
         debian_pkg_names |= set([
-            'python3-catkin-pkg',
+            'python3-catkin-pkg-modules',
             'python3-colcon-ros',
             'python3-colcon-test-result',
-            'python3-rosdistro',
+            'python3-rosdistro-modules',
         ])
 
     print('Always install the following generic dependencies:')

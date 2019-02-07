@@ -225,7 +225,7 @@ parameters = [
         'echo "# END SECTION"',
         '',
         '# Ensure an egg_info exists in the ros_buildfarm package (for Colcon entry points)',
-        'python3 -u $WORKSPACE/ros_buildfarm/setup.py egg_info -e $WORKSPACE/ros_buildfarm',
+        'SKIP_PYTHON_SCRIPTS=1 python3 -u $WORKSPACE/ros_buildfarm/setup.py egg_info -e $WORKSPACE/ros_buildfarm',
         '',
         'echo "# BEGIN SECTION: Run Dockerfile - create workspace"',
         'export UNDERLAY_JOB_SPACE=$WORKSPACE/underlay/ros%d-linux' % (ros_version),
