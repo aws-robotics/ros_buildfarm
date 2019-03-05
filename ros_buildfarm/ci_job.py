@@ -205,7 +205,7 @@ def configure_ci_job(
 
     job_config = _get_ci_job_config(
         index, rosdistro_name, build_file, os_name,
-        os_code_name, arch, job_name,
+        os_code_name, arch,
         build_file.repos_files,
         underlay_source_job,
         underlay_source_paths,
@@ -228,7 +228,7 @@ def configure_ci_view(jenkins, view_name, dry_run=False):
 
 def _get_ci_job_config(
         index, rosdistro_name, build_file, os_name,
-        os_code_name, arch, job_name,
+        os_code_name, arch,
         repos_files, underlay_source_job,
         underlay_source_paths, trigger_timer,
         is_disabled=False):
@@ -259,9 +259,6 @@ def _get_ci_job_config(
                 rosdistro_name, 'ci'))),
 
         'disabled': is_disabled,
-
-        # this should not be necessary
-        'job_name': job_name,
 
         'ros_buildfarm_repository': get_repository(),
 

@@ -44,8 +44,6 @@ It generates three Dockerfiles: one to perform the *create-workspace* task to
 populate the workspace and enumerate prerequisites, one to perform the
 *build-and-install* task, and one to perform the *build-and-test* task.
 
-A typical job runs 4 Dockerfiles in all.
-
 Create workspace
 ^^^^^^^^^^^^^^^^
 
@@ -56,7 +54,7 @@ The task performs the following steps:
 
 * Prepare the package sources
 
-  * Fetches the `.repos` file(s)
+  * Fetches the ``.repos`` file(s)
   * Fetches the source repositories containing the package(s) to be built
   * If necessary, switches the branch in those repositories
 
@@ -86,11 +84,11 @@ Known limitations
 ^^^^^^^^^^^^^^^^^
 
 System dependency enumeration happens for all ROS packages that are part of the
-non-underlay workspace. This means that any non-ROS packages present in that
-workspace may need their dependencies explicitly called out for inclusion in
-the foundation package list, and also means that a missing dependency may be
-occluded by another package in the workspace correctly declaring the same
-dependency.
+non-underlay workspace.
+This means that any non-ROS packages present in that workspace may need their
+dependencies explicitly called out for inclusion in the foundation package list,
+and also means that a missing dependency may be occluded by another package in
+the workspace correctly declaring the same dependency.
 
 Run the *CI* job locally
 ------------------------
@@ -111,10 +109,10 @@ from ROS *Crystal* for Ubuntu *Bionic* *amd64*:
 Return code
 -----------
 
-The return code of the generated script will be zero if it successfully performed
-the build and ran the test even if some tests failed. By setting the environment
-variable `ABORT_ON_TEST_FAILURE=1` the return code will also be non-zero in case
-of failed tests.
+The return code of the generated script will be zero if it successfully
+performed the build and ran the test even if some tests failed.
+By setting the environment variable ``ABORT_ON_TEST_FAILURE=1`` the return code
+will also be non-zero in case of failed tests.
 
 Instead of invoking the generated script it can also be *sourced*:
 
@@ -127,12 +125,13 @@ The return code of the invocation of ``catkin_tests_results`` /
 ``test_result_RC``.
 
 Run the *CI* job on Travis
------------------------------
+--------------------------
 
 Since it is easy to run a *CI* job locally it can also be run on Travis to
-either test every commit or pull request. The setup and invocation is the same
-as locally. The following .travis.yml template is a good starting point and is
-ready to be use:
+either test every commit or pull request.
+The setup and invocation is the same as locally.
+The following .travis.yml template is a good starting point and is ready to be
+used:
 
 .. code:: yaml
 
@@ -179,7 +178,8 @@ ready to be use:
   notifications:
     email: false
 
-An example can be found in the `.travis.yml <https://github.com/ros-infrastructure/ros_buildfarm/blob/master/.travis.yml>`_ file of the *ros_buildfarm* repository.
+An example can be found in the `.travis.yml <https://github.com/ros-infrastructure/ros_buildfarm/blob/master/.travis.yml>`_
+file of the *ros_buildfarm* repository.
 
 Run for "custom" repositories
 -----------------------------

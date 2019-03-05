@@ -57,17 +57,14 @@ matrix:
         # install colcon for test results
         - pip install colcon-core colcon-test-result
         - python setup.py install
-        - mkdir -p job_under job_over/underlay
-        - ln -s .. job_under/ros_buildfarm
-        - ln -s .. job_over/ros_buildfarm
+        - mkdir job job/underlay && cd job
+        - ln -s .. ros_buildfarm
       script:
-        - cd job_under
-        - generate_ci_script.py $CONFIG2_URL $ROS2_DISTRO_NAME default $OS_NAME $OS_CODE_NAME2 $ARCH --packages-select $UNDERLAY_PACKAGES --depth-before 100 > job_under.sh
-        - (. job_under.sh -y; exit $test_result_RC)
-        - cd ../job_over
-        - tar -xjf ../job_under/ros2-$ROS2_DISTRO_NAME-linux-$OS_CODE_NAME2-$ARCH-ci.tar.bz2 -C underlay
-        - generate_ci_script.py $CONFIG2_URL $ROS2_DISTRO_NAME default $OS_NAME $OS_CODE_NAME2 $ARCH --packages-select $OVERLAY_PACKAGES --depth-before 100 --build-ignore $UNDERLAY_PACKAGES --underlay-source-path underlay/ros2-linux > job_over.sh
-        - (. job_over.sh -y; exit $test_result_RC)
+        - generate_ci_script.py $CONFIG2_URL $ROS2_DISTRO_NAME default $OS_NAME $OS_CODE_NAME2 $ARCH --packages-select $UNDERLAY_PACKAGES --depth-before 100 > job.sh
+        - (. job.sh -y; exit $test_result_RC)
+        - tar -xjf ros2-$ROS2_DISTRO_NAME-linux-$OS_CODE_NAME2-$ARCH-ci.tar.bz2 -C underlay
+        - generate_ci_script.py $CONFIG2_URL $ROS2_DISTRO_NAME default $OS_NAME $OS_CODE_NAME2 $ARCH --packages-select $OVERLAY_PACKAGES --depth-before 100 --build-ignore $UNDERLAY_PACKAGES --underlay-source-path underlay/ros2-linux > job.sh
+        - (. job.sh -y; exit $test_result_RC)
     - language: python
       python: "3.6"
       sudo: required

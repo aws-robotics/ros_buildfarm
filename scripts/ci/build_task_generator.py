@@ -79,9 +79,10 @@ def main(argv=sys.argv[1:]):
 
     apt_cache = Cache()
 
-    debian_pkg_names = set(args.foundation_packages)
+    debian_pkg_names = set(['build-essential'])
+    debian_pkg_names.update(args.foundation_packages)
     if args.build_tool == 'colcon':
-        debian_pkg_names |= set([
+        debian_pkg_names.update([
             'python3-catkin-pkg-modules',
             'python3-colcon-ros',
             'python3-colcon-test-result',

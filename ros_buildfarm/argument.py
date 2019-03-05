@@ -304,11 +304,11 @@ def check_len_action(minargs, maxargs):
         def __call__(self, parser, args, values, option_string=None):
             if len(values) < minargs:
                 raise argparse.ArgumentError(
-                        argument=self,
-                        message="expected at least %s arguments" % (minargs))
+                    argument=self,
+                    message='expected at least %s arguments' % (minargs))
             elif len(values) > maxargs:
                 raise argparse.ArgumentError(
-                        argument=self,
-                        message="expected at most %s arguments" % (minargs))
+                    argument=self,
+                    message='expected at most %s arguments' % (minargs))
             setattr(args, self.dest, values)
     return CheckLength

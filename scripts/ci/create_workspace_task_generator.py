@@ -140,10 +140,6 @@ def main(argv=sys.argv[1:]):
     create_dockerfile(
         'ci/create_workspace.Dockerfile.em', data, args.dockerfile_dir)
 
-    # output hints about necessary volumes to mount
-    ros_buildfarm_basepath = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), '..', '..'))
-
 
 if __name__ == '__main__':
     main()

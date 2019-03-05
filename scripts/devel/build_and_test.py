@@ -67,14 +67,13 @@ def main(argv=sys.argv[1:]):
         with Scope('SUBSECTION', 'build workspace in isolation'):
             test_results_dir = os.path.join(
                 args.workspace_root, 'test_results')
-            cmake_args = ['-DBUILD_TESTING=1']
+            cmake_args = [
+                '-DBUILD_TESTING=1'
+                '-DCATKIN_ENABLE_TESTING=1', '-DCATKIN_SKIP_TESTING=0',
+                '-DCATKIN_TEST_RESULTS_DIR=%s' % test_results_dir]
             additional_args = None
             if args.build_tool == 'colcon':
                 additional_args = ['--test-result-base', test_results_dir]
-            elif args.build_tool == 'catkin_make_isolated':
-                cmake_args += [
-                    '-DCATKIN_ENABLE_TESTING=1', '-DCATKIN_SKIP_TESTING=0',
-                    '-DCATKIN_TEST_RESULTS_DIR=%s' % test_results_dir]
             env = dict(os.environ)
             env['MAKEFLAGS'] = '-j1'
             rc = call_build_tool(

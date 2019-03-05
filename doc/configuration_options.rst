@@ -393,7 +393,7 @@ The following options are valid as keys in the ``_config`` dict under
   20-default.list file from your forked rosdistro repository.
 
 Specific options in CI build files
----------------------------------------
+----------------------------------
 
 This yaml file defines the configuration for *CI* jobs.
 
@@ -404,16 +404,18 @@ The file format is specified by the following information:
 
 The following options are valid in version ``1`` (beside the generic options):
 
-* ``build_tool``: the build tool to use. The following are valid values:
+* ``build_tool``: the build tool to use.
+  The following are valid values:
 
   * ``catkin_make_isolated`` (default)
   * ``colcon``
 
 * ``foundation_packages``: a list of packages which should be installed by
   default before any of the dependencies necessary to build the packages in the
-  workspace. Since not all packages in the workspace are necessarily ROS
-  packages, rosdep may be unable to detect and install the prerequisites for
-  those packages, so those prerequisite packages may need to be listed here.
+  workspace.
+  Since not all packages in the workspace are necessarily ROS packages, rosdep
+  may be unable to detect and install the prerequisites for those packages, so
+  those prerequisite packages may need to be listed here.
 
 * ``jenkins_job_priority``: the job priority of *CI* jobs.
 

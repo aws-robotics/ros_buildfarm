@@ -164,7 +164,7 @@ parameters = [
         ' ' + ' '.join(repository_args) +
         ' --build-tool ' + build_tool +
         ' --ros-version ' + str(ros_version) +
-        ' --env-vars ' + ' '.join(build_environment_variables) +
+        ' --env-vars ' + ' '.join([v.replace('$', '\\$',) for v in build_environment_variables]) +
         ' --dockerfile-dir $WORKSPACE/docker_generating_dockers' +
         ' --repos-file-urls $repos_files' +
         ' --test-branch "$test_branch"' +
